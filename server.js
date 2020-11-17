@@ -27,33 +27,59 @@ app.get("/api/workouts", (req, res) => {
     });
 });
 
-// app.get("/user", (req, res) => {
-//   db.User.find({})
-//     .then(dbUser => {
-//       res.json(dbUser);
-//     })
-//     .catch(err => {
-//       res.json(err);
-//     });
-// });
+app.get("/api/workouts", (req, res) => {
+  db.Workout.find({})
+    .then(dbUser => {
+      res.json(dbUser);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
 
-// app.post("/submit", ({ body }, res) => {
-//   db.Note.create(body)
-//     .then(({ _id }) => db.User.findOneAndUpdate({}, { $push: { notes: _id } }, { new: true }))
-//     .then(dbUser => {
-//       res.json(dbUser);
-//     })
-//     .catch(err => {
-//       res.json(err);
-//     });
-// });
+app.post("/api/workouts", ({ body }, res) => {
+  db.Workout.create(body)
+    .then(({ _id }) => db.User.findOneAndUpdate({}, { $push: { exercises: _id } }, { new: true }))
+    .then(dbUser => {
+      res.json(dbUser);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
 
 // put call for updating workout (pushing in new data)
+app.put('/api/workouts', ({ body }, res) => {
+  db.Workout.updateEvents(body)
+  .then(({ _id }) => db.User.findOneAndUpdate({}, { $push: { exercises: _id } }, { new: true }))
+  .then(dbUser => {
+    res.json(dbUser);
+  })
+  .catch(err => {
+    res.json(err);
+  });
+});
 
 // two more app.get calls for html routes
+app.get("/stats", (req, res) => {
+  db.Workout.find({})
+    .then(dbUser => {
+      res.sendFile(dbStats);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
 
-// res.sendFile stats
-// res.sendFile exercise
+app.get("/exercise", (req, res) => {
+  db.Workout.find({})
+    .then(dbUser => {
+      res.sendFile(dbExercise);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);
