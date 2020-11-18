@@ -35,16 +35,6 @@ app.get("/api/workouts", (req, res) => {
     });
 });
 
-app.get("/api/workouts", (req, res) => {
-  db.Workout.find({})
-    .then(dbUser => {
-      res.json(dbUser);
-    })
-    .catch(err => {
-      res.json(err);
-    });
-});
-
 app.post("/api/workouts", ({ body }, res) => {
   db.Workout.create(body)
     .then(({ _id }) => db.User.findOneAndUpdate({}, { $push: { exercises: _id } }, { new: true }))
